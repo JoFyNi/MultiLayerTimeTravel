@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class Game {
     private Spielbrett spielbrett;
     private Spieler spieler;
+    private Status status;
     private final RessourcenManager ressourcenManager = new RessourcenManager("ressourcen.dat");
 
     private final Erz erz = new Erz(10);
@@ -29,6 +30,7 @@ public class Game {
 
         // Initialisiere den Spieler
         spieler = new Spieler(0, 0, ressourcenManager); // Startposition des Spielers: (0, 0)
+        status = spieler.getStatus();
     }
 
     /**
@@ -93,6 +95,14 @@ public class Game {
             System.out.println("Holz: " + spieler.getRessourceMenge(Holz.class));
             System.out.println("Gold: " + spieler.getRessourceMenge(Gold.class));
 
+            System.out.println("\n---Status---\n" +
+                    "Leben: " + spieler.getStatus().getLeben() + "\n" +
+                    "Ausdauer: " + spieler.getStatus().getAusdauer() + "\n" +
+                    "Kraft: " + spieler.getStatus().getKraft() + "\n" +
+                    "Rüstung: " + spieler.getStatus().getRuestung() + "\n" +
+                    "Wissen: " + spieler.getStatus().getWissen() + "\n" +
+                    "Führung: " + spieler.getStatus().getFuehrung() + "\n"
+            );
             // Beispiel: Speichern des Ressourcenstands
             ressourcenManager.speichern();
 
