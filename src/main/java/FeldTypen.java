@@ -1,10 +1,13 @@
 public enum FeldTypen {
     /**
-     * LAND: Ein normales Landfeld mit einem Ressourcenwert von 1.
-     * WASSER: Ein Wasserfeld ohne Ressourcenwert.
-     * GEBIRGE: Ein Gebirgsfeld ohne Ressourcenwert.
-     * STADT: Ein Stadtfeld ohne Ressourcenwert.
-     * RESSOURCE: Ein Ressourcenfeld mit einem Ressourcenwert von 10.
+     * LAND: ein normales Landfeld mit einem Ressourcenwert von 1.
+     * WASSER: ein Wasserfeld ohne Ressourcenwert.
+     * GEBIRGE: ein Gebirgsfeld ohne Ressourcenwert.
+     * STADT: ein Stadtfeld ohne Ressourcenwert.
+     * RESSOURCE: ein Ressourcenfeld mit einem Ressourcenwert von 10.
+     * WALD:
+     * WÜSTE:
+     * TURM:
      */
     LAND(1),
     WASSER(0),

@@ -109,8 +109,7 @@ public class Game {
                 System.out.print("Gib die neue Y-Position ein: ");
                 int neueY = scanner.nextInt();
 
-                spieler.bewege(neueX, neueY);
-                System.out.println("Spieler bewegt sich nach: " + spieler.getPositionX() + "x" + spieler.getPositionY());
+                spieler.bewege(neueX, neueY, spieler, spielbrett);
 
                 // Überprüfe auf Kollisionen oder spezifische Ereignisse nach der Bewegung
                 FeldTypen feldtyp = spielbrett.getFeldtyp(spieler.getPositionX(), spieler.getPositionY());

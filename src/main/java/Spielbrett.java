@@ -16,6 +16,19 @@ public class Spielbrett {
         felder = new FeldTypen[zeilen][spalten];
     }
 
+    public int getBewegungskosten(int aktuelleX, int aktuelleY, int neueX, int neueY) {
+        FeldTypen aktuellesFeldtyp = getFeldtyp(aktuelleX, aktuelleY);
+        FeldTypen neuesFeldtyp = getFeldtyp(neueX, neueY);
+
+        int bewegungskosten = Math.abs(neueX - aktuelleX) + Math.abs(neueY - aktuelleY);
+
+        if (aktuellesFeldtyp == FeldTypen.GEBIRGE || neuesFeldtyp == FeldTypen.GEBIRGE) {
+            bewegungskosten += 1; // Erhöhe die Bewegungskosten um 1 für jedes Gebirgsfeld
+        }
+
+        return bewegungskosten;
+    }
+
     /**
      * Setzt den Feldtyp an der angegebenen Position im Spielbrett.
      * @param zeile Zeilenindex

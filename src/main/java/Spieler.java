@@ -4,20 +4,53 @@ import java.util.Scanner;
 
 public class Spieler {
     private RessourcenManager ressourcenManager;
+    private Status status;
     private int positionX;
     private int positionY;
 
     public Spieler(int startX, int startY, RessourcenManager RM) {
         positionX = startX;
         positionY = startY;
-        ressourcenManager = RM;
+        status = new Status(200, 100, 10, 5, 20, 15); // Beispielwerte für den Status
+        this.ressourcenManager = RM;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 
     // Methode zum Bewegen des Spielers auf dem Spielbrett
-    public void bewege(int deltaX, int deltaY) {
-        positionX += deltaX;
-        positionY += deltaY;
+    public void bewege(int neueX, int neueY, Spieler spieler, Spielbrett spielbrett) {
+        int bewegungskosten = spielbrett.getBewegungskosten(spieler.getPositionX(), spieler.getPositionY(), neueX, neueY); // Standard-Bewegungskosten
+
+        FeldTypen feldtyp = spielbrett.getFeldtyp(neueX, neueY);
+
+        if (feldtyp == FeldTypen.WASSER) {
+            System.out.println("Das Wasser kann nicht betreten werden.");
+            return;
+        } else if (feldtyp == FeldTypen.GEBIRGE) {
+            bewegungskosten += 1; // Erhöhe die Bewegungskosten um 1 bei jedem Berg-Feld
+        } else if (feldtyp == FeldTypen.STADT) {
+            System.out.println("Du hast eine Stadt erreicht. Kostenlose Einheiten stehen zur Verfügung.");
+            // Füge hier den Code hinzu, um kostenlose Einheiten zur Verfügung zu stellen
+        } else if (feldtyp == FeldTypen.RESSOURCE) {
+            System.out.println("Du hast eine Ressource gefunden. Es besteht die Möglichkeit eines Kampfes mit Gegnern.");
+            // Füge hier den Code hinzu, um einen Kampf mit Gegnern zu initiieren
+        }
+
+        if (bewegungskosten > spieler.getStatus().getAusdauer()) {
+            System.out.println("Du bist zu erschöpft, um dich so weit zu bewegen.");
+            return;
+        }
+
+        positionX = neueX;
+        positionY = neueY;
+        spieler.getStatus().setAusdauer(spieler.getStatus().getAusdauer() - bewegungskosten);
+
+
+        System.out.println("Spieler bewegt sich nach: " + positionX + "x" + positionY);
     }
+
 
     public int getPositionX() {
         return positionX;
