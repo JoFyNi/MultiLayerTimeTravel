@@ -2,11 +2,12 @@ import ressourcen.*;
 
 import java.util.Scanner;
 
-public class Spieler {
+public class Spieler extends MainFrame{
     private RessourcenManager ressourcenManager;
     private Status status;
     private int positionX;
     private int positionY;
+    private static String logMessage;
 
     public Spieler(int startX, int startY, RessourcenManager RM) {
         positionX = startX;
@@ -25,21 +26,29 @@ public class Spieler {
 
         FeldTypen feldtyp = spielbrett.getFeldtyp(neueX, neueY);
 
-        if (feldtyp == FeldTypen.WASSER) {
-            System.out.println("Das Wasser kann nicht betreten werden.");
+        if (feldtyp == FeldTypen.LAND) {
+            bewegungskosten += 1; // Erhöhe die Bewegungskosten um 1 bei jedem Berg-Feld
+        } else if (feldtyp == FeldTypen.WASSER) {
+            System.out.println(logMessage);
             return;
         } else if (feldtyp == FeldTypen.GEBIRGE) {
-            bewegungskosten += 1; // Erhöhe die Bewegungskosten um 1 bei jedem Berg-Feld
+            bewegungskosten += 3; // Erhöhe die Bewegungskosten um 1 bei jedem Berg-Feld
+        } else if (feldtyp == FeldTypen.WALD) {
+            bewegungskosten += 2; // Erhöhe die Bewegungskosten um 1 bei jedem Wald-Feld
         } else if (feldtyp == FeldTypen.STADT) {
-            System.out.println("Du hast eine Stadt erreicht. Kostenlose Einheiten stehen zur Verfügung.");
+            bewegungskosten += -1;
+            logMessage = "Du hast eine Stadt erreicht. Kostenlose Einheiten stehen zur Verfügung.";
             // Füge hier den Code hinzu, um kostenlose Einheiten zur Verfügung zu stellen
         } else if (feldtyp == FeldTypen.RESSOURCE) {
-            System.out.println("Du hast eine Ressource gefunden. Es besteht die Möglichkeit eines Kampfes mit Gegnern.");
+            bewegungskosten += 1;
+            logMessage = "Du hast eine Ressource gefunden. Es besteht die Möglichkeit eines Kampfes mit Gegnern.";
             // Füge hier den Code hinzu, um einen Kampf mit Gegnern zu initiieren
         }
+        System.out.println(logMessage);
 
         if (bewegungskosten > spieler.getStatus().getAusdauer()) {
             System.out.println("Du bist zu erschöpft, um dich so weit zu bewegen.");
+            logMessage = "Du bist zu erschöpft, um dich so weit zu bewegen.";
             return;
         }
 
@@ -47,10 +56,9 @@ public class Spieler {
         positionY = neueY;
         spieler.getStatus().setAusdauer(spieler.getStatus().getAusdauer() - bewegungskosten);
 
-
-        System.out.println("Spieler bewegt sich nach: " + positionX + "x" + positionY);
+        logMessage = ("Spieler bewegt sich nach: " + positionX + "x" + positionY);
+        System.out.println(logMessage);
     }
-
 
     public int getPositionX() {
         return positionX;
@@ -79,6 +87,13 @@ public class Spieler {
                         break;
                     case 3:
                         // Logik für das Bauen eines Gebäudes auf dem Landfeld
+                        /*
+                        Verteidigung, Tor wenn [G] [L] [G]
+
+                                         [L] [L] [L]
+                        Stadt bauen wenn [L] [L] [L]
+                                         [L] [L] [L]
+                         */
                         break;
                     default:
                         System.out.println("Ungültige Auswahl.");
@@ -88,6 +103,7 @@ public class Spieler {
             case WASSER:
                 System.out.println("Wasser");
                 System.out.println("Kann nicht betreten werden.");
+                // wenn Landfläche vor Wasser → Hafen bauen [L] [W]
                 break;
             case GEBIRGE:
                 System.out.println("Gebirge");
@@ -101,9 +117,33 @@ public class Spieler {
                         break;
                     case 2:
                         // Logik für das Abbauen von Ressourcen auf dem Gebirgsfeld
+                        // change Erz, Gold, Kristall abzubauen
                         break;
                     case 3:
                         // Logik für das Verstecken auf dem Gebirgsfeld
+                        break;
+                    default:
+                        System.out.println("Ungültige Auswahl.");
+                        break;
+                }
+                break;
+            case WALD:
+                System.out.println("WALD");
+                System.out.println("1. Warten");
+                System.out.println("2. Abholzen");
+                System.out.println("3. Bauen");
+                int waldAuswahl = scanner.nextInt();
+                switch (waldAuswahl) {
+                    case 1:
+                        // Logik für das Warten auf dem waldAuswahlfeld
+                        break;
+                    case 2:
+                        // Logik für das Abholzen des Feldes
+                        // 2 Holz pro runde
+                        break;
+                    case 3:
+                        // Logik für das Bauen eines Gebäudes auf dem Waldfeld
+                        // Holzfäller hütte → 5 Holz pro runde
                         break;
                     default:
                         System.out.println("Ungültige Auswahl.");
@@ -163,5 +203,9 @@ public class Spieler {
             return ressourceClass.getSimpleName() + ": " + ressource.getMenge();
         }
         return "";
+    }
+
+    public static String getLogMessage() {
+        return logMessage;
     }
 }

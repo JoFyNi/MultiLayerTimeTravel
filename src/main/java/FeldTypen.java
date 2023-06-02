@@ -12,6 +12,7 @@ public enum FeldTypen {
     LAND(1),
     WASSER(0),
     GEBIRGE(0),
+    WALD(5),
     STADT(0),
     RESSOURCE(10);
 

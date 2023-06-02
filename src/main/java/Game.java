@@ -1,22 +1,22 @@
-import ressourcen.Erz;
-import ressourcen.Gold;
-import ressourcen.Holz;
-import ressourcen.RessourcenManager;
+import ressourcen.*;
 
+import javax.swing.*;
 import java.util.Scanner;
 
 /**
  * Die Hauptklasse des Spiels.
  */
-public class Game {
+public class Game extends MainFrame {
     private Spielbrett spielbrett;
-    private Spieler spieler;
+    static Spieler spieler;
     private Status status;
     private final RessourcenManager ressourcenManager = new RessourcenManager("ressourcen.dat");
 
     private final Erz erz = new Erz(10);
     private final Holz holz = new Holz(10);
     private final Gold gold = new Gold(10);
+    private final Kristall kristall = new Kristall(10);
+    private String statusMessage;
 
     /**
      * Erstellt ein neues Spielobjekt.
@@ -54,6 +54,7 @@ public class Game {
             ressourcenManager.updateRessource(Erz.class, 10);
             ressourcenManager.updateRessource(Holz.class, 10);
             ressourcenManager.updateRessource(Gold.class, 10);
+            ressourcenManager.updateRessource(Kristall.class, 10);
 
             // Speichere den Ressourcenstand
             ressourcenManager.speichern();
@@ -78,11 +79,14 @@ public class Game {
      * Führt den Spielablauf aus.
      */
     private void spieleSpiel() {
+        createGUI();
+
         Scanner scanner = new Scanner(System.in);
 
         ressourcenManager.addRessource(erz);
         ressourcenManager.addRessource(holz);
         ressourcenManager.addRessource(gold);
+        ressourcenManager.addRessource(kristall);
 
         // Spielablauf-Schleife
         while (true) {
@@ -94,15 +98,18 @@ public class Game {
             System.out.println("Erz: " + spieler.getRessourceMenge(Erz.class));
             System.out.println("Holz: " + spieler.getRessourceMenge(Holz.class));
             System.out.println("Gold: " + spieler.getRessourceMenge(Gold.class));
+            System.out.println("Kristall: " + spieler.getRessourceMenge(Kristall.class));
 
-            System.out.println("\n---Status---\n" +
+
+            String statusMessage = "\n----Status----\n" +
                     "Leben: " + spieler.getStatus().getLeben() + "\n" +
                     "Ausdauer: " + spieler.getStatus().getAusdauer() + "\n" +
                     "Kraft: " + spieler.getStatus().getKraft() + "\n" +
                     "Rüstung: " + spieler.getStatus().getRuestung() + "\n" +
                     "Wissen: " + spieler.getStatus().getWissen() + "\n" +
-                    "Führung: " + spieler.getStatus().getFuehrung() + "\n"
-            );
+                    "Führung: " + spieler.getStatus().getFuehrung() + "\n";
+            System.out.println(statusMessage);
+
             // Beispiel: Speichern des Ressourcenstands
             ressourcenManager.speichern();
 
@@ -137,6 +144,34 @@ public class Game {
         }
     }
 
+    public static String getStatusMessage() {
+        return "\n---Status---\n" +
+                "Leben: " + spieler.getStatus().getLeben() + "\n" +
+                "Ausdauer: " + spieler.getStatus().getAusdauer() + "\n" +
+                "Kraft: " + spieler.getStatus().getKraft() + "\n" +
+                "Rüstung: " + spieler.getStatus().getRuestung() + "\n" +
+                "Wissen: " + spieler.getStatus().getWissen() + "\n" +
+                "Führung: " + spieler.getStatus().getFuehrung() + "\n";
+    }
+    public static String getRessourceMessage() {
+        return "Ressourcenstand: \n" +
+        "Erz: " + spieler.getRessourceMenge(Erz.class) + "\n" +
+        "Holz: " + spieler.getRessourceMenge(Holz.class) + "\n" +
+        "Gold: " + spieler.getRessourceMenge(Gold.class) + "\n" +
+        "Kristall: " + spieler.getRessourceMenge(Kristall.class) + "\n";
+    }
+
+    private void createGUI() {
+        MainFrame ui = new MainFrame();
+        JPanel root = ui.getRootPanel();
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setContentPane(root);
+        frame.pack();
+        frame.setSize(1080,720);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
     /**
      * Der Einstiegspunkt des Spiels.
      *

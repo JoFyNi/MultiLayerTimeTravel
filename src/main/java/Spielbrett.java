@@ -1,9 +1,9 @@
 import java.util.Random;
 
-public class Spielbrett {
+public class Spielbrett extends MainFrame {
     static int zeilen;
     static int spalten;
-    private FeldTypen[][] felder;
+    private static FeldTypen[][] felder;
 
     /**
      * Erstellt ein Spielbrett mit den angegebenen Zeilen und Spalten.
@@ -168,7 +168,7 @@ public class Spielbrett {
      */
     private void ressourcenInteraktion(Spieler spieler, int zeile, int spalte) {
         // Implementiere die spezifische Logik für die Interaktion mit einem Ressourcenfeld
-        // Zum Beispiel: Ressourcen sammeln, abbauen, etc.
+        // zum Beispiel: Ressourcen sammeln, abbauen, etc.
     }
 
     /**
@@ -192,6 +192,29 @@ public class Spielbrett {
             }
             System.out.println();
         }
+    }
+
+    public static String updateSpielbrettArea() {
+        if (Game.spieler != null) {
+            int spielerPosX = Game.spieler.getPositionX();
+            int spielerPosY = Game.spieler.getPositionY();
+
+            StringBuilder spielbrettText = new StringBuilder();
+            for (int y = 0; y < zeilen; y++) {
+                for (int x = 0; x < spalten; x++) {
+                    FeldTypen feldTyp = felder[y][x];
+
+                    if (x == spielerPosX && y == spielerPosY) {
+                        spielbrettText.append(ConsoleColors.BLUE_BOLD).append(" [").append(feldTyp.name().charAt(0)).append("] ").append(ConsoleColors.RESET);
+                    } else {
+                        spielbrettText.append(" [").append(feldTyp.name().charAt(0)).append("] ");
+                    }
+                }
+                spielbrettText.append("\n");
+            }
+            return spielbrettText.toString();
+        }
+        return null;
     }
 
     /**
