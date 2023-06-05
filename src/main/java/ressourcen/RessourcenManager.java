@@ -61,4 +61,15 @@ public class RessourcenManager {
         return null;
     }
 
+    public Map<Class<? extends Ressource>, Ressource> getRessourceMap() {
+        ressourcenMap.put(Holz.class, getRessource(Holz.class));
+        ressourcenMap.put(Erz.class,  getRessource(Erz.class));
+        ressourcenMap.put(Gold.class, getRessource(Gold.class));
+        ressourcenMap.put(Kristall.class, getRessource(Kristall.class));
+        // Füge hier weitere Ressourcen zur Map hinzu
+        return ressourcenMap;
+    }
+    public Map<Class<? extends Ressource>, Ressource> getRessourcenMap() {
+        return this.ressourcenMap;
+    }
 }

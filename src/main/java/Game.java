@@ -1,22 +1,21 @@
 import ressourcen.*;
 
 import javax.swing.*;
+import java.util.Properties;
 import java.util.Scanner;
 
 /**
  * Die Hauptklasse des Spiels.
  */
-public class Game extends MainFrame {
+public class Game extends MainFrame implements RessourcenInterface{
     private Spielbrett spielbrett;
     static Spieler spieler;
     private Status status;
+    static String statusMessage;
+    static String ressourcenMessage;
     private final RessourcenManager ressourcenManager = new RessourcenManager("ressourcen.dat");
-
-    private final Erz erz = new Erz(10);
-    private final Holz holz = new Holz(10);
-    private final Gold gold = new Gold(10);
-    private final Kristall kristall = new Kristall(10);
-    private String statusMessage;
+    Speichern speicher = new Speichern("ressourcen.dat");
+    Properties props = new Properties();
 
     /**
      * Erstellt ein neues Spielobjekt.
@@ -80,13 +79,17 @@ public class Game extends MainFrame {
      */
     private void spieleSpiel() {
         createGUI();
+        setSpielerStatus(spieler, status);
 
-        Scanner scanner = new Scanner(System.in);
+        speicher.anzeigenGespeicherteDaten();
 
+        checkForExistingGame();
         ressourcenManager.addRessource(erz);
         ressourcenManager.addRessource(holz);
         ressourcenManager.addRessource(gold);
         ressourcenManager.addRessource(kristall);
+
+        Scanner scanner = new Scanner(System.in);
 
         // Spielablauf-Schleife
         while (true) {
@@ -94,58 +97,66 @@ public class Game extends MainFrame {
             spielbrett.zeigeSpielbrett(spieler);
 
             System.out.println("Spielerposition: " + spieler.getPositionX() + "x" + spieler.getPositionY());
-            System.out.println("Aktueller Ressourcenstand:");
-            System.out.println("Erz: " + spieler.getRessourceMenge(Erz.class));
-            System.out.println("Holz: " + spieler.getRessourceMenge(Holz.class));
-            System.out.println("Gold: " + spieler.getRessourceMenge(Gold.class));
-            System.out.println("Kristall: " + spieler.getRessourceMenge(Kristall.class));
 
+            setResultMessage();
+            setStatusMessage();
 
-            String statusMessage = "\n----Status----\n" +
-                    "Leben: " + spieler.getStatus().getLeben() + "\n" +
-                    "Ausdauer: " + spieler.getStatus().getAusdauer() + "\n" +
-                    "Kraft: " + spieler.getStatus().getKraft() + "\n" +
-                    "Rüstung: " + spieler.getStatus().getRuestung() + "\n" +
-                    "Wissen: " + spieler.getStatus().getWissen() + "\n" +
-                    "Führung: " + spieler.getStatus().getFuehrung() + "\n";
-            System.out.println(statusMessage);
+            System.out.println(getStatusMessage());
+            System.out.println(getRessourceMessage());
 
             // Beispiel: Speichern des Ressourcenstands
-            ressourcenManager.speichern();
+
 
             System.out.println("1. Bewegen");
             System.out.println("2. Interagieren");
-            System.out.println("3. Beenden");
+            System.out.println("3. Speichern");
+            System.out.println("4. Beenden");
 
             int auswahl = scanner.nextInt();
+            FeldTypen feldtyp = spielbrett.getFeldtyp(spieler.getPositionX(), spieler.getPositionY());
 
-            if (auswahl == 1) {
-                // Bewegung
-                System.out.print("Gib die neue X-Position ein: ");
-                int neueX = scanner.nextInt();
-                System.out.print("Gib die neue Y-Position ein: ");
-                int neueY = scanner.nextInt();
+            switch (auswahl) {
+                case 1:
+                    // Bewegung
+                    System.out.print("Gib die neue X-Position ein: ");
+                    int neueX = scanner.nextInt();
+                    System.out.print("Gib die neue Y-Position ein: ");
+                    int neueY = scanner.nextInt();
 
-                spieler.bewege(neueX, neueY, spieler, spielbrett);
+                    spieler.bewege(neueX, neueY, spieler, spielbrett);
 
-                // Überprüfe auf Kollisionen oder spezifische Ereignisse nach der Bewegung
-                FeldTypen feldtyp = spielbrett.getFeldtyp(spieler.getPositionX(), spieler.getPositionY());
-                spieler.interagiere(feldtyp);
-            } else if (auswahl == 2) {
-                // Interaktion
-                FeldTypen feldtyp = spielbrett.getFeldtyp(spieler.getPositionX(), spieler.getPositionY());
-                spieler.interagiere(feldtyp);
-            } else if (auswahl == 3) {
-                // Beenden
-                break; // Verlasse die Spielablauf-Schleife
-            } else {
-                System.out.println("Ungültige Auswahl.");
+                    // Überprüfe auf Kollisionen oder spezifische Ereignisse nach der Bewegung
+                    spieler.interagiere(feldtyp);
+                    break;
+                case 2:
+                    // Interaktion
+                    spieler.interagiere(feldtyp);
+                    break;
+                case 3:
+                    speicher.speichern(ressourcenManager.getRessourcenMap(), statusMessage, ressourcenMessage);    // ressourcenManager.getRessourcenMap()
+                    break;
+                case 4:
+                    // Beenden
+                    break; // Verlasse die Spielablauf-Schleife
+                default:
+                    System.out.println("Ungültige Auswahl.");
+                    break;
             }
         }
     }
 
-    public static String getStatusMessage() {
-        return "\n---Status---\n" +
+    private void checkForExistingGame() {
+        speicher.laden(props, spieler);
+        if (speicher == null) {
+            ressourcenManager.addRessource(erz);
+            ressourcenManager.addRessource(holz);
+            ressourcenManager.addRessource(gold);
+            ressourcenManager.addRessource(kristall);
+        }
+    }
+
+    public void setStatusMessage() {
+        statusMessage = "\n----Status----\n" +
                 "Leben: " + spieler.getStatus().getLeben() + "\n" +
                 "Ausdauer: " + spieler.getStatus().getAusdauer() + "\n" +
                 "Kraft: " + spieler.getStatus().getKraft() + "\n" +
@@ -153,12 +164,18 @@ public class Game extends MainFrame {
                 "Wissen: " + spieler.getStatus().getWissen() + "\n" +
                 "Führung: " + spieler.getStatus().getFuehrung() + "\n";
     }
+    public void setResultMessage() {
+        ressourcenMessage = "Ressourcenstand: \n" +
+                spieler.getRessourceMenge(Erz.class) + "\n" +
+                spieler.getRessourceMenge(Holz.class) + "\n" +
+                spieler.getRessourceMenge(Gold.class) + "\n" +
+                spieler.getRessourceMenge(Kristall.class) + "\n";
+    }
+    public static String getStatusMessage() {
+        return statusMessage;
+    }
     public static String getRessourceMessage() {
-        return "Ressourcenstand: \n" +
-        "Erz: " + spieler.getRessourceMenge(Erz.class) + "\n" +
-        "Holz: " + spieler.getRessourceMenge(Holz.class) + "\n" +
-        "Gold: " + spieler.getRessourceMenge(Gold.class) + "\n" +
-        "Kristall: " + spieler.getRessourceMenge(Kristall.class) + "\n";
+        return ressourcenMessage;
     }
 
     private void createGUI() {

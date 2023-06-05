@@ -4,9 +4,9 @@ public abstract class Ressource {
     protected String name;
     protected int menge;
 
-    public Ressource(String name, int menge) {
-        this.name = name;
-        this.menge = menge;
+    public Ressource(String setName, int setMenge) {
+        this.name = setName;
+        this.menge = setMenge;
     }
 
     public String getName() {
@@ -17,7 +17,7 @@ public abstract class Ressource {
         return menge;
     }
 
-    public void setMenge(int menge) {
-        this.menge = menge;
+    public void setMenge(int newMenge) {
+        this.menge = newMenge;
     }
 }

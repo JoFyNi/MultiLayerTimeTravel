@@ -53,15 +53,24 @@ public class Status {
         return wissen;
     }
 
-    public void setWissen(int wissen) {
-        this.wissen = wissen;
+    public void setWissen(int setWissen) {
+        this.wissen = setWissen;
     }
 
     public int getFuehrung() {
         return fuehrung;
     }
 
-    public void setFuehrung(int fuehrung) {
-        this.fuehrung = fuehrung;
+    public void setFuehrung(int setFuehrung) {
+        this.fuehrung = setFuehrung;
+    }
+
+    public void copy(Status status) {
+        status.getLeben();
+        status.getAusdauer();
+        status.getKraft();
+        status.getRuestung();
+        status.getWissen();
+        status.getFuehrung();
     }
 }

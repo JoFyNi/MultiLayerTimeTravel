@@ -1,6 +1,9 @@
+import ressourcen.Ressource;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map;
 
 public class MainFrame {
     private JTextPane logPane;
@@ -11,7 +14,10 @@ public class MainFrame {
     private JTextPane ressourcenPane;
     private JTextArea spielbrettArea;
     private JScrollPane spielbrettScrollPane;
-
+    private JButton saveBtn;
+    Map<Class<? extends Ressource>, Ressource> ressourcenMap;
+    Spieler spieler;
+    Status status;
 
     public MainFrame () {
         // Erstelle einen Timer mit einer Aktualisierungsrate von 1 Sekunde (1000 Millisekunden)
@@ -23,9 +29,21 @@ public class MainFrame {
                 updateLogPane();        // Methode aufrufen, um den Inhalt des logPane zu aktualisieren
                 updateRessourcenPane(); // Methode aufrufen, um den Inhalt des ressourcenPane zu aktualisieren
                 setScreen();
+
+                buttons();
             }
         });
         timer.start();
+    }
+
+    private void buttons() {
+        saveBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Speichern speicher = new Speichern("ressourcen.dat");
+                //speicher.speichern(ressourcenMap, statusMessage, ressourcenMessage);    // ressourcenManager.getRessourcenMap()
+            }
+        });
     }
 
     public JPanel getRootPanel() {
@@ -54,5 +72,10 @@ public class MainFrame {
     }
     public void updateRessourcenPane() {
         setRessourcenPane(Game.getRessourceMessage());
+    }
+
+    public void setSpielerStatus(Spieler setSpieler, Status setStatus) {
+        this.spieler = setSpieler;
+        this.status = setStatus;
     }
 }

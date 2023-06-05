@@ -1,19 +1,27 @@
-import ressourcen.*;
+import ressourcen.Ressource;
+import ressourcen.RessourcenInterface;
+import ressourcen.RessourcenManager;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
-public class Spieler extends MainFrame{
+public class Spieler extends MainFrame implements RessourcenInterface {
     private RessourcenManager ressourcenManager;
     private Status status;
     private int positionX;
     private int positionY;
     private static String logMessage;
+    private Map<Class<? extends Ressource>, Ressource> ressourcenMap;
+
 
     public Spieler(int startX, int startY, RessourcenManager RM) {
         positionX = startX;
         positionY = startY;
         status = new Status(200, 100, 10, 5, 20, 15); // Beispielwerte für den Status
         this.ressourcenManager = RM;
+        this.ressourcenMap = new HashMap<>();
     }
 
     public Status getStatus() {
@@ -56,7 +64,7 @@ public class Spieler extends MainFrame{
         positionY = neueY;
         spieler.getStatus().setAusdauer(spieler.getStatus().getAusdauer() - bewegungskosten);
 
-        logMessage = ("Spieler bewegt sich nach: " + positionX + "x" + positionY);
+        logMessage = ("Spieler bewegt sich nach:\nx:" + positionX + " y:" + positionY);
         System.out.println(logMessage);
     }
 
@@ -118,6 +126,18 @@ public class Spieler extends MainFrame{
                     case 2:
                         // Logik für das Abbauen von Ressourcen auf dem Gebirgsfeld
                         // change Erz, Gold, Kristall abzubauen
+                        Random random = new Random();
+                        int randomErzMenge = random.nextInt(6); // Zufällige Zahl zwischen 0 und 5
+                        int randomGoldMenge = random.nextInt(6); // Zufällige Zahl zwischen 0 und 5
+                        int randomKristallMenge = random.nextInt(6); // Zufällige Zahl zwischen 0 und 5
+
+                        erz.setMenge(holz.getMenge() + randomErzMenge);
+                        gold.setMenge(holz.getMenge() + randomGoldMenge);
+                        kristall.setMenge(holz.getMenge() + randomKristallMenge);
+                        logMessage = randomErzMenge + " Erz gefunden\n" +
+                                randomGoldMenge + " Gold gefunden\n" +
+                                randomKristallMenge + " Kristall gefunden\n";
+                        System.out.println(logMessage);
                         break;
                     case 3:
                         // Logik für das Verstecken auf dem Gebirgsfeld
@@ -139,7 +159,8 @@ public class Spieler extends MainFrame{
                         break;
                     case 2:
                         // Logik für das Abholzen des Feldes
-                        // 2 Holz pro runde
+                        // abholzen generiert 2 Holz
+                        holz.setMenge(holz.getMenge() + 2);
                         break;
                     case 3:
                         // Logik für das Bauen eines Gebäudes auf dem Waldfeld
@@ -151,14 +172,17 @@ public class Spieler extends MainFrame{
                 }
                 break;
             case STADT:
+                // öffnet neues Frame für Stadtverwaltung
+
                 System.out.println("Stadt");
-                System.out.println("1. Betreten");
+                System.out.println("1. Ausruhen");
                 System.out.println("2. Verwalten");
                 System.out.println("3. Einheiten rekrutieren");
                 int stadtAuswahl = scanner.nextInt();
                 switch (stadtAuswahl) {
                     case 1:
-                        // Logik für das Betreten der Stadt
+                        // Logik für das Ausruhen in der Stadt
+                        getStatus().setAusdauer(getStatus().getAusdauer() + 10);
                         break;
                     case 2:
                         // Logik für das Verwalten der Stadt (Bauen, Upgraden)
@@ -204,8 +228,18 @@ public class Spieler extends MainFrame{
         }
         return "";
     }
+    public void setRessourceMenge(Class<? extends Ressource> ressourcenKlasse, int menge) {
+        Ressource ressource = ressourcenMap.get(ressourcenKlasse);
+        if (ressource != null) {
+            ressource.setMenge(menge);
+        } else {
+            // Handle the case when the resource is not found
+            System.out.println("Ressource not found.");
+        }
+    }
 
     public static String getLogMessage() {
         return logMessage;
     }
+
 }
