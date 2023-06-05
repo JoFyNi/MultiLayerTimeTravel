@@ -1,6 +1,4 @@
-import ressourcen.Ressource;
-import ressourcen.RessourcenInterface;
-import ressourcen.RessourcenManager;
+import ressourcen.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +12,12 @@ public class Spieler extends MainFrame implements RessourcenInterface {
     private int positionY;
     private static String logMessage;
     private Map<Class<? extends Ressource>, Ressource> ressourcenMap;
+
+    // Ressourcen
+    private Erz erz;
+    private Holz holz;
+    private Gold gold;
+    private Kristall kristall;
 
 
     public Spieler(int startX, int startY, RessourcenManager RM) {
@@ -221,13 +225,14 @@ public class Spieler extends MainFrame implements RessourcenInterface {
         }
     }
 
-    public String getRessourceMenge(Class<? extends Ressource> ressourceClass) {
+    public String getRessourceInformation(Class<? extends Ressource> ressourceClass) {
         Ressource ressource = ressourcenManager.getRessource(ressourceClass);
         if (ressource != null) {
             return ressourceClass.getSimpleName() + ": " + ressource.getMenge();
         }
         return "";
     }
+
     public void setRessourceMenge(Class<? extends Ressource> ressourcenKlasse, int menge) {
         Ressource ressource = ressourcenMap.get(ressourcenKlasse);
         if (ressource != null) {
@@ -236,6 +241,25 @@ public class Spieler extends MainFrame implements RessourcenInterface {
             // Handle the case when the resource is not found
             System.out.println("Ressource not found.");
         }
+    }
+
+    public void setRessourcen(Erz e, Holz h, Gold g, Kristall k) {
+        this.erz = e;
+        this.holz = h;
+        this.gold = g;
+        this.kristall = k;
+    }
+    public Ressource getErz() {
+        return erz;
+    }
+    public Ressource getHolz() {
+        return holz;
+    }
+    public Ressource getGold() {
+        return gold;
+    }
+    public Ressource getKristall() {
+        return kristall;
     }
 
     public static String getLogMessage() {

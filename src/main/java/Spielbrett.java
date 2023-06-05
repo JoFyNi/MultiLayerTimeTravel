@@ -46,8 +46,14 @@ public class Spielbrett extends MainFrame {
      * @return Der Feldtyp an der angegebenen Position
      */
     public FeldTypen getFeldtyp(int zeile, int spalte) {
-        return felder[zeile][spalte];
+        try {
+            return felder[zeile][spalte];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Außerhalb des Spielfeldes");
+            return null; // Oder einen geeigneten Standardwert für den Feldtyp zurückgeben
+        }
     }
+
 
     /**
      * Generiert das Spielbrett mit zufälligen Feldtypen.

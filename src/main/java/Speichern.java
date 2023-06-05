@@ -14,7 +14,16 @@ public class Speichern {
         this.speicherdatei = speicherdatei;
     }
 
-    public void speichern(Map<Class<? extends Ressource>, Ressource> ressourcenMap, String statusMessage, String ressourcenMessage) {
+    public void speichern(Map<Class<? extends Ressource>, Ressource> ressourcenMap, Spieler spieler) {
+        // Vor dem Aufruf von speichern und laden
+        System.out.println("Ressourcen in der Map:");
+        for (Map.Entry<Class<? extends Ressource>, Ressource> entry : ressourcenMap.entrySet()) {
+            Class<? extends Ressource> ressourcenKlasse = entry.getKey();
+            Ressource ressource = entry.getValue();
+            System.out.println(ressourcenKlasse.getName() + ": " + ressource.getMenge());
+        }
+
+
         Properties properties = new Properties();
 
         // Ressourcen speichern
@@ -24,11 +33,14 @@ public class Speichern {
             properties.setProperty(ressourcenKlasse.getName(), String.valueOf(ressource.getMenge()));
         }
 
-        // Status speichern
-        properties.setProperty("status", statusMessage);
+        Status status = spieler.getStatus();
+        properties.setProperty("leben", String.valueOf(status.getLeben()));
+        properties.setProperty("ausdauer", String.valueOf(status.getAusdauer()));
+        properties.setProperty("kraft", String.valueOf(status.getKraft()));
+        properties.setProperty("ruestung", String.valueOf(status.getRuestung()));
+        properties.setProperty("wissen", String.valueOf(status.getWissen()));
+        properties.setProperty("fuehrung", String.valueOf(status.getFuehrung()));
 
-        // Ressourcen-Message speichern
-        properties.setProperty("ressourcen", ressourcenMessage);
 
         // Speichern der Properties in eine Datei
         try (FileOutputStream outputStream = new FileOutputStream(speicherdatei)) {
@@ -49,18 +61,39 @@ public class Speichern {
         }
 
         // Setze die geladenen Werte auf die entsprechenden Parameter
-        spieler.getStatus().setLeben(getIntegerProperty(props, "leben"));
-        spieler.getStatus().setAusdauer(getIntegerProperty(props, "ausdauer"));
-        spieler.getStatus().setKraft(getIntegerProperty(props, "kraft"));
-        spieler.getStatus().setRuestung(getIntegerProperty(props, "ruestung"));
-        spieler.getStatus().setWissen(getIntegerProperty(props, "wissen"));
-        spieler.getStatus().setFuehrung(getIntegerProperty(props, "fuehrung"));
+        Status status = spieler.getStatus();
+        status.setLeben(getIntegerProperty(props, "leben"));
+        status.setAusdauer(getIntegerProperty(props, "ausdauer"));
+        status.setKraft(getIntegerProperty(props, "kraft"));
+        status.setRuestung(getIntegerProperty(props, "ruestung"));
+        status.setWissen(getIntegerProperty(props, "wissen"));
+        status.setFuehrung(getIntegerProperty(props, "fuehrung"));
 
-        // Setze die Ressourcenmengen
-        spieler.setRessourceMenge(Erz.class, getIntegerProperty(props, "erz"));
-        spieler.setRessourceMenge(Holz.class, getIntegerProperty(props, "holz"));
-        spieler.setRessourceMenge(Gold.class, getIntegerProperty(props, "gold"));
-        spieler.setRessourceMenge(Kristall.class, getIntegerProperty(props, "kristall"));
+        // Drucken Sie die geladenen Werte
+        System.out.println("Leben: " + status.getLeben());
+        System.out.println("Ausdauer: " + status.getAusdauer());
+        System.out.println("Kraft: " + status.getKraft());
+        System.out.println("Rüstung: " + status.getRuestung());
+        System.out.println("Wissen: " + status.getWissen());
+        System.out.println("Führung: " + status.getFuehrung());
+
+        int erzMenge = getIntegerProperty(props, "ressourcen.Erz");
+        int holzMenge = getIntegerProperty(props, "ressourcen.Holz");
+        int goldMenge = getIntegerProperty(props, "ressourcen.Gold");
+        int kristallMenge = getIntegerProperty(props, "ressourcen.Kristall");
+
+        // Erstellen Sie die Ressourcen-Objekte
+        Erz erz = new Erz(erzMenge);
+        Holz holz = new Holz(holzMenge);
+        Gold gold = new Gold(goldMenge);
+        Kristall kristall = new Kristall(kristallMenge);
+
+        spieler.setRessourcen(erz, holz, gold, kristall);
+
+
+        // Drucken Sie die geladenen Schlüssel und Werte
+        System.out.println("Geladene Schlüssel und Werte:");
+        props.forEach((key, value) -> System.out.println(key + "=" + value));
     }
 
     private int getIntegerProperty(Properties props, String key) {
@@ -75,14 +108,7 @@ public class Speichern {
         return 0; // or return a default value depending on your requirements
     }
 
-    public void anzeigenGespeicherteDaten() {
-        Properties props = new Properties();
-        try (InputStream input = new FileInputStream(speicherdatei)) {
-            props.load(input);
-            System.out.println("Gespeicherte Daten:");
-            props.forEach((key, value) -> System.out.println(key + "=" + value));
-        } catch (IOException e) {
-            System.out.println("Fehler beim Laden der Daten: " + e.getMessage());
-        }
+    public void setRessourcenMenge() {
+
     }
 }

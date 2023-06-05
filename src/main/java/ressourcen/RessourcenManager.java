@@ -1,6 +1,5 @@
 package ressourcen;
 
-import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,26 +29,6 @@ public class RessourcenManager {
             return ressource.getMenge();
         }
         return 0;
-    }
-
-    public void speichern() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(speicherdatei))) {
-            oos.writeObject(ressourcenMap);
-            oos.close();
-            System.out.println("Ressourcen erfolgreich gespeichert.");
-        } catch (IOException e) {
-            System.out.println("Fehler beim Speichern der Ressourcen: " + e.getMessage());
-        }
-    }
-
-    public void laden() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(speicherdatei))) {
-            ressourcenMap = (Map<Class<? extends Ressource>, Ressource>) ois.readObject();
-            ois.close();
-            System.out.println("Ressourcen erfolgreich geladen.");
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Fehler beim Laden der Ressourcen: " + e.getMessage());
-        }
     }
 
     public Ressource getRessource(Class<? extends Ressource> ressourceClass) {

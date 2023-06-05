@@ -55,14 +55,11 @@ public class Game extends MainFrame implements RessourcenInterface{
             ressourcenManager.updateRessource(Gold.class, 10);
             ressourcenManager.updateRessource(Kristall.class, 10);
 
-            // Speichere den Ressourcenstand
-            ressourcenManager.speichern();
-
             // Starte den eigentlichen Spielablauf
             spieleSpiel();
         } else if (auswahl == 2) {
             // Spiel laden
-            ressourcenManager.laden();
+            speicher.laden(props, spieler);
 
             // Beispiel: Lade die Position des Spielers
             spieler = new Spieler(0, 0, ressourcenManager); // Setze die richtigen Koordinaten basierend auf dem geladenen Spielstand
@@ -78,16 +75,13 @@ public class Game extends MainFrame implements RessourcenInterface{
      * Führt den Spielablauf aus.
      */
     private void spieleSpiel() {
+        // erstelle GUI
         createGUI();
+        // übergebe spieler und status
         setSpielerStatus(spieler, status);
 
-        speicher.anzeigenGespeicherteDaten();
-
+        // rufe gespeicherte werte ab
         checkForExistingGame();
-        ressourcenManager.addRessource(erz);
-        ressourcenManager.addRessource(holz);
-        ressourcenManager.addRessource(gold);
-        ressourcenManager.addRessource(kristall);
 
         Scanner scanner = new Scanner(System.in);
 
@@ -98,14 +92,13 @@ public class Game extends MainFrame implements RessourcenInterface{
 
             System.out.println("Spielerposition: " + spieler.getPositionX() + "x" + spieler.getPositionY());
 
-            setResultMessage();
+            setRessourceMessage();
             setStatusMessage();
 
             System.out.println(getStatusMessage());
             System.out.println(getRessourceMessage());
 
             // Beispiel: Speichern des Ressourcenstands
-
 
             System.out.println("1. Bewegen");
             System.out.println("2. Interagieren");
@@ -133,10 +126,10 @@ public class Game extends MainFrame implements RessourcenInterface{
                     spieler.interagiere(feldtyp);
                     break;
                 case 3:
-                    speicher.speichern(ressourcenManager.getRessourcenMap(), statusMessage, ressourcenMessage);    // ressourcenManager.getRessourcenMap()
+                    speicher.speichern(ressourcenManager.getRessourcenMap(), spieler);    // ressourcenManager.getRessourcenMap()
                     break;
                 case 4:
-                    // Beenden
+                    System.exit(0);
                     break; // Verlasse die Spielablauf-Schleife
                 default:
                     System.out.println("Ungültige Auswahl.");
@@ -147,11 +140,16 @@ public class Game extends MainFrame implements RessourcenInterface{
 
     private void checkForExistingGame() {
         speicher.laden(props, spieler);
-        if (speicher == null) {
+        if (props.isEmpty()) {
             ressourcenManager.addRessource(erz);
             ressourcenManager.addRessource(holz);
             ressourcenManager.addRessource(gold);
             ressourcenManager.addRessource(kristall);
+        } else {
+            ressourcenManager.addRessource(spieler.getErz());
+            ressourcenManager.addRessource(spieler.getHolz());
+            ressourcenManager.addRessource(spieler.getGold());
+            ressourcenManager.addRessource(spieler.getKristall());
         }
     }
 
@@ -164,12 +162,12 @@ public class Game extends MainFrame implements RessourcenInterface{
                 "Wissen: " + spieler.getStatus().getWissen() + "\n" +
                 "Führung: " + spieler.getStatus().getFuehrung() + "\n";
     }
-    public void setResultMessage() {
+    public void setRessourceMessage() {
         ressourcenMessage = "Ressourcenstand: \n" +
-                spieler.getRessourceMenge(Erz.class) + "\n" +
-                spieler.getRessourceMenge(Holz.class) + "\n" +
-                spieler.getRessourceMenge(Gold.class) + "\n" +
-                spieler.getRessourceMenge(Kristall.class) + "\n";
+                spieler.getRessourceInformation(Erz.class) + "\n" +
+                spieler.getRessourceInformation(Holz.class) + "\n" +
+                spieler.getRessourceInformation(Gold.class) + "\n" +
+                spieler.getRessourceInformation(Kristall.class) + "\n";
     }
     public static String getStatusMessage() {
         return statusMessage;
