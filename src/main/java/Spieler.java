@@ -1,3 +1,5 @@
+import gegner.Bandit;
+import gegner.Wolf;
 import ressourcen.*;
 
 import java.util.HashMap;
@@ -18,7 +20,6 @@ public class Spieler extends MainFrame implements RessourcenInterface {
     private Holz holz;
     private Gold gold;
     private Kristall kristall;
-
 
     public Spieler(int startX, int startY, RessourcenManager RM) {
         positionX = startX;
@@ -51,9 +52,9 @@ public class Spieler extends MainFrame implements RessourcenInterface {
             bewegungskosten += -1;
             logMessage = "Du hast eine Stadt erreicht. Kostenlose Einheiten stehen zur Verfügung.";
             // Füge hier den Code hinzu, um kostenlose Einheiten zur Verfügung zu stellen
-        } else if (feldtyp == FeldTypen.RESSOURCE) {
+        } else if (feldtyp == FeldTypen.WUESTE) {
             bewegungskosten += 1;
-            logMessage = "Du hast eine Ressource gefunden. Es besteht die Möglichkeit eines Kampfes mit Gegnern.";
+            logMessage = "Du bist in einer Wüste angelangt. Es besteht die Möglichkeit von Banditen angegriffen zu werden.";
             // Füge hier den Code hinzu, um einen Kampf mit Gegnern zu initiieren
         }
         System.out.println(logMessage);
@@ -83,6 +84,7 @@ public class Spieler extends MainFrame implements RessourcenInterface {
     // Methode zur Interaktion mit einem bestimmten Feldtyp
     public void interagiere(FeldTypen feldtyp) {
         Scanner scanner = new Scanner(System.in);
+        logMessage = feldtyp.toString();
         switch (feldtyp) {
             case LAND:
                 System.out.println("Land");
@@ -93,6 +95,7 @@ public class Spieler extends MainFrame implements RessourcenInterface {
                 switch (landAuswahl) {
                     case 1:
                         // Logik für das Warten auf dem Landfeld
+                        getStatus().setAusdauer(getStatus().getAusdauer() + 3);
                         break;
                     case 2:
                         // Logik für das Erkunden der umliegenden Felder
@@ -145,6 +148,7 @@ public class Spieler extends MainFrame implements RessourcenInterface {
                         break;
                     case 3:
                         // Logik für das Verstecken auf dem Gebirgsfeld
+                        getStatus().setAusdauer(getStatus().getAusdauer() + 2);
                         break;
                     default:
                         System.out.println("Ungültige Auswahl.");
@@ -160,6 +164,7 @@ public class Spieler extends MainFrame implements RessourcenInterface {
                 switch (waldAuswahl) {
                     case 1:
                         // Logik für das Warten auf dem waldAuswahlfeld
+                        getStatus().setAusdauer(getStatus().getAusdauer() + 3);
                         break;
                     case 2:
                         // Logik für das Abholzen des Feldes
@@ -199,14 +204,17 @@ public class Spieler extends MainFrame implements RessourcenInterface {
                         break;
                 }
                 break;
-            case RESSOURCE:
-                System.out.println("Ressource");
-                System.out.println("1. Auflisten");
+            case WUESTE:
+                System.out.println("Wüste");
+                System.out.println("1. Warten");
                 System.out.println("2. Verwalten");
                 int ressourcenAuswahl = scanner.nextInt();
                 switch (ressourcenAuswahl) {
                     case 1:
                         // Logik für die Auflistung der Ressourcen auf dem Ressourcenfeld
+                        getStatus().setAusdauer(getStatus().getAusdauer() + 1);
+
+                        changeAufGegner();
                         break;
                     case 2:
                         // Logik für die Verwaltung der Ressourcen auf dem Ressourcenfeld
@@ -222,6 +230,38 @@ public class Spieler extends MainFrame implements RessourcenInterface {
             default:
                 System.out.println("Warte");
                 break;
+        }
+    }
+
+    private void changeAufGegner() {
+        Wolf wolf = null;
+        Bandit bandit = null;
+        Random random = new Random();
+        int randomGegner = random.nextInt(6); // Zufällige Zahl zwischen 0 und 5
+
+        switch (randomGegner) {
+            case 0:
+                wolf = new Wolf(50,20,5,2,2,10);
+                System.out.println(wolf);
+                break;
+            case 1:
+                break;
+            case 2:
+                bandit = new Bandit(100,30,8,6,7,9);
+                System.out.println(bandit);
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            default:
+                break;
+        }
+
+        if (wolf != null || bandit != null) {
+
         }
     }
 

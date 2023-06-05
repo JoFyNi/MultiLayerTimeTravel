@@ -14,6 +14,11 @@ public class Speichern {
         this.speicherdatei = speicherdatei;
     }
 
+    /**
+     * speichert alle Ressourcen und Status Werte nach Schlüssel und Werte prinzip
+     * @param ressourcenMap alle Ressourcen Namen + Werte
+     * @param spieler um getter und setter zu verwenden
+     */
     public void speichern(Map<Class<? extends Ressource>, Ressource> ressourcenMap, Spieler spieler) {
         // Vor dem Aufruf von speichern und laden
         System.out.println("Ressourcen in der Map:");
@@ -22,7 +27,6 @@ public class Speichern {
             Ressource ressource = entry.getValue();
             System.out.println(ressourcenKlasse.getName() + ": " + ressource.getMenge());
         }
-
 
         Properties properties = new Properties();
 
@@ -41,6 +45,9 @@ public class Speichern {
         properties.setProperty("wissen", String.valueOf(status.getWissen()));
         properties.setProperty("fuehrung", String.valueOf(status.getFuehrung()));
 
+        /*
+         * Speichert der Karte?
+         */
 
         // Speichern der Properties in eine Datei
         try (FileOutputStream outputStream = new FileOutputStream(speicherdatei)) {

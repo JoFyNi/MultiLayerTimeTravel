@@ -14,7 +14,7 @@ public enum FeldTypen {
     GEBIRGE(0),
     WALD(5),
     STADT(0),
-    RESSOURCE(10);
+    WUESTE(10);
 
     private int ressourcenWert;
 

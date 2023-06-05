@@ -87,42 +87,6 @@ public class Spielbrett extends MainFrame {
     }
 
     /**
-     * Interagiert mit dem Spieler an der angegebenen Position im Spielbrett.
-     * @param spieler Der Spieler, der mit dem Feld interagiert
-     * @param zeile Zeilenindex
-     * @param spalte Spaltenindex
-     */
-    public void interagiereMitFeld(Spieler spieler, int zeile, int spalte) {
-        FeldTypen feldtyp = felder[zeile][spalte];
-
-        switch (feldtyp) {
-            case LAND:
-                // Logik für die Interaktion mit einem Landfeld
-                landInteraktion(spieler, zeile, spalte);
-                break;
-            case WASSER:
-                // Logik für die Interaktion mit einem Wasserfeld
-                wasserInteraktion(spieler, zeile, spalte);
-                break;
-            case GEBIRGE:
-                // Logik für die Interaktion mit einem Gebirgsfeld
-                gebirgeInteraktion(spieler, zeile, spalte);
-                break;
-            case STADT:
-                // Logik für die Interaktion mit einem Stadtfeld
-                stadtInteraktion(spieler, zeile, spalte);
-                break;
-            case RESSOURCE:
-                // Logik für die Interaktion mit einem Ressourcenfeld
-                ressourcenInteraktion(spieler, zeile, spalte);
-                break;
-            default:
-                // Unerwarteter Feldtyp
-                break;
-        }
-    }
-
-    /**
      * Führt die Interaktionslogik für den Feldtyp LAND aus.
      * @param spieler Der Spieler, der mit dem Landfeld interagiert
      * @param zeile Zeilenindex

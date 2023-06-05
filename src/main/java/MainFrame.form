@@ -27,7 +27,7 @@
           <component id="88ad7" class="javax.swing.JTextPane" binding="logPane">
             <constraints>
               <grid row="1" column="0" row-span="3" col-span="1" vsize-policy="6" hsize-policy="6" anchor="10" fill="0" indent="0" use-parent-layout="false">
-                <preferred-size width="120" height="60"/>
+                <preferred-size width="160" height="80"/>
               </grid>
             </constraints>
             <properties>
