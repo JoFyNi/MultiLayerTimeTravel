@@ -1,5 +1,4 @@
-import gegner.Bandit;
-import gegner.Wolf;
+import gegner.GegnerInterface;
 import ressourcen.*;
 
 import java.util.HashMap;
@@ -7,7 +6,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Spieler extends MainFrame implements RessourcenInterface {
+public class Spieler extends MainFrame implements RessourcenInterface, GegnerInterface {
     private RessourcenManager ressourcenManager;
     private Status status;
     private int positionX;
@@ -129,6 +128,7 @@ public class Spieler extends MainFrame implements RessourcenInterface {
                 switch (gebirgeAuswahl) {
                     case 1:
                         // Logik für das Klettern auf dem Gebirgsfeld
+                        changeAufGegner();
                         break;
                     case 2:
                         // Logik für das Abbauen von Ressourcen auf dem Gebirgsfeld
@@ -165,6 +165,7 @@ public class Spieler extends MainFrame implements RessourcenInterface {
                     case 1:
                         // Logik für das Warten auf dem waldAuswahlfeld
                         getStatus().setAusdauer(getStatus().getAusdauer() + 3);
+                        changeAufGegner();
                         break;
                     case 2:
                         // Logik für das Abholzen des Feldes
@@ -234,34 +235,26 @@ public class Spieler extends MainFrame implements RessourcenInterface {
     }
 
     private void changeAufGegner() {
-        Wolf wolf = null;
-        Bandit bandit = null;
         Random random = new Random();
-        int randomGegner = random.nextInt(6); // Zufällige Zahl zwischen 0 und 5
+        int randomGegner = random.nextInt(3); // Zufällige Zahl zwischen 0 und 5
 
         switch (randomGegner) {
             case 0:
-                wolf = new Wolf(50,20,5,2,2,10);
+                wolf.getClass();
+                setActiveFight(true);
+                Spielbrett.setFight(wolf.toString());
                 System.out.println(wolf);
                 break;
             case 1:
                 break;
             case 2:
-                bandit = new Bandit(100,30,8,6,7,9);
-                System.out.println(bandit);
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-            case 5:
+                bandit.getClass();
+                setActiveFight(true);
+                Spielbrett.setFight(bandit.getClass().toString());
+                System.out.println(bandit.getClass().toString());
                 break;
             default:
                 break;
-        }
-
-        if (wolf != null || bandit != null) {
-
         }
     }
 

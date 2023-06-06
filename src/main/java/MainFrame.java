@@ -18,6 +18,9 @@ public class MainFrame {
     Map<Class<? extends Ressource>, Ressource> ressourcenMap;
     Spieler spieler;
     Status status;
+    //
+    private boolean activeFight = false;
+
 
     public MainFrame () {
         // Erstelle einen Timer mit einer Aktualisierungsrate von 1 Sekunde (1000 Millisekunden)
@@ -28,13 +31,14 @@ public class MainFrame {
                 updateStatusPane();     // Methode aufrufen, um den Inhalt des statusPane zu aktualisieren
                 updateLogPane();        // Methode aufrufen, um den Inhalt des logPane zu aktualisieren
                 updateRessourcenPane(); // Methode aufrufen, um den Inhalt des ressourcenPane zu aktualisieren
-                setScreen();
+                updateScreenPane(); //
 
                 buttons();
             }
         });
         timer.start();
     }
+
 
     private void buttons() {
         saveBtn.addActionListener(new ActionListener() {
@@ -50,8 +54,8 @@ public class MainFrame {
         return backScreen;
     }
 
-    public void setScreen() {
-        spielbrettArea.setText(Spielbrett.updateSpielbrettArea());
+    public void setScreen(String message) {
+        spielbrettArea.setText(message);
     }
     public void setLogPane(String message) {
         logPane.setText(message);
@@ -73,9 +77,22 @@ public class MainFrame {
     public void updateRessourcenPane() {
         setRessourcenPane(Game.getRessourceMessage());
     }
+    public void updateScreenPane() {
+        if (activeFight) {
+            setScreen(Spielbrett.getFight());
+        } else {
+            setScreen(Spielbrett.updateSpielbrettArea());
+        }
+    }
 
     public void setSpielerStatus(Spieler setSpieler, Status setStatus) {
         this.spieler = setSpieler;
         this.status = setStatus;
+    }
+
+    public void setActiveFight(boolean fightIsActive) {
+        activeFight = fightIsActive;
+        logPane.setText("ActiveFight");
+
     }
 }

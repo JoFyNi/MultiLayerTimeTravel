@@ -16,6 +16,8 @@ public class Game extends MainFrame implements RessourcenInterface{
     private final RessourcenManager ressourcenManager = new RessourcenManager("ressourcen.dat");
     Speichern speicher = new Speichern("ressourcen.dat");
     Properties props = new Properties();
+    //
+    private boolean activeFight = false;
 
     /**
      * Erstellt ein neues Spielobjekt.
@@ -83,20 +85,20 @@ public class Game extends MainFrame implements RessourcenInterface{
         // rufe gespeicherte werte ab
         checkForExistingGame();
 
+        // Zeige das Spielbrett
+        spielbrett.zeigeSpielbrett(spieler);
+
         Scanner scanner = new Scanner(System.in);
 
         // Spielablauf-Schleife
         while (true) {
-            // Zeige das Spielbrett
-            spielbrett.zeigeSpielbrett(spieler);
-
             System.out.println("Spielerposition: " + spieler.getPositionX() + "x" + spieler.getPositionY());
 
             setRessourceMessage();
             setStatusMessage();
 
-            System.out.println(getStatusMessage());
-            System.out.println(getRessourceMessage());
+            //System.out.println(getStatusMessage());
+            //System.out.println(getRessourceMessage());
 
             // Beispiel: Speichern des Ressourcenstands
 
@@ -174,6 +176,17 @@ public class Game extends MainFrame implements RessourcenInterface{
     }
     public static String getRessourceMessage() {
         return ressourcenMessage;
+    }
+
+    /**
+     * signal for fight's
+     * @param fightIsActive signal for private boolean
+     */
+    public void setActiveFight(boolean fightIsActive) {
+        activeFight = fightIsActive;
+    }
+    public boolean getActiveFight() {
+        return activeFight;
     }
 
     private void createGUI() {

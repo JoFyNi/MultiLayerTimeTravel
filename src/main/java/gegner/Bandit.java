@@ -16,7 +16,7 @@ public class Bandit extends Gegner {
     public String toString() {
         return "Bandit:\n" +
                 "Leben: " + getLeben() +
-                "\nAusdauer: " + " : " + getAusdauer() +
+                "\nAusdauer: " + getAusdauer() +
                 "\nKraft: " + getAngriff() +
                 "\nRüstung: " + getRuestung() +
                 "\nWissen: " + getWissen() +

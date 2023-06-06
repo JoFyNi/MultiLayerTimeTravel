@@ -16,7 +16,7 @@ public class Wolf extends Gegner {
     public String toString() {
         return "Wolf:\n" +
                 "Leben: " + getLeben() +
-                "\nAusdauer: " + " : " + getAusdauer() +
+                "\nAusdauer: " + getAusdauer() +
                 "\nKraft: " + getAngriff() +
                 "\nRüstung: " + getRuestung() +
                 "\nWissen: " + getWissen() +
