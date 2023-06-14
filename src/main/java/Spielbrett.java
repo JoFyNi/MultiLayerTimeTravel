@@ -82,7 +82,6 @@ public class Spielbrett extends MainFrame {
         }
     }
 
-
     /**
      * Generiert das Spielbrett mit zufälligen Feldtypen.
      * @return Das generierte Spielbrett als zweidimensionales Feld
@@ -98,6 +97,10 @@ public class Spielbrett extends MainFrame {
         }
         return new FeldTypen[getZeile()][getSpalte()];
     }
+    public static FeldTypen[][] getFelder() {
+        return felder = new FeldTypen[getZeile()][getSpalte()];
+    }
+
     /**
      * Gibt die Anzahl der Zeilen des Spielbretts zurück.
      * @return Die Anzahl der Zeilen des Spielbretts
@@ -135,30 +138,6 @@ public class Spielbrett extends MainFrame {
             }
             System.out.println();
         }
-    }
-
-    // anzeige für JTextArea
-    public static String updateSpielbrettArea() {
-        if (Game.spieler != null) {
-            int spielerPosX = Game.spieler.getPositionX();
-            int spielerPosY = Game.spieler.getPositionY();
-
-            StringBuilder spielbrettText = new StringBuilder();
-            for (int y = 0; y < zeilen; y++) {
-                for (int x = 0; x < spalten; x++) {
-                    FeldTypen feldTyp = felder[y][x];
-
-                    if (x == spielerPosX && y == spielerPosY) {
-                        spielbrettText.append(ConsoleColors.BLUE_BOLD).append(" [").append(feldTyp.name().charAt(0)).append("] ").append(ConsoleColors.RESET);
-                    } else {
-                        spielbrettText.append(" [").append(feldTyp.name().charAt(0)).append("] ");
-                    }
-                }
-                spielbrettText.append("\n");
-            }
-            return spielbrettText.toString();
-        }
-        return null;
     }
 
     /**

@@ -75,7 +75,6 @@ public class Spieler extends MainFrame implements RessourcenInterface, GegnerInt
     public int getPositionX() {
         return positionX;
     }
-
     public int getPositionY() {
         return positionY;
     }

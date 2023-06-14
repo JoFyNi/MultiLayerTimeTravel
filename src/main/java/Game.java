@@ -8,6 +8,8 @@ import java.util.Scanner;
  * Die Hauptklasse des Spiels.
  */
 public class Game extends MainFrame implements RessourcenInterface{
+    public static int getPlayerPositionX;
+    public static int getPlayerPositionY;
     private Spielbrett spielbrett;
     static Spieler spieler;
     private Status status;
@@ -16,15 +18,19 @@ public class Game extends MainFrame implements RessourcenInterface{
     private final RessourcenManager ressourcenManager = new RessourcenManager("ressourcen.dat");
     Speichern speicher = new Speichern("ressourcen.dat");
     Properties props = new Properties();
-    //
+    // INITIALISING VARIABLEN
+    final int SPIELBRETT_BREITE = 20;
+    final int SPIELBRETT_HOEHE = 20;
     private boolean activeFight = false;
+
 
     /**
      * Erstellt ein neues Spielobjekt.
      */
     public Game() {
         // Initialisiere das Spielbrett
-        spielbrett = new Spielbrett(20, 20); // Beispielgröße: 20x20
+        spielbrett = new Spielbrett(SPIELBRETT_BREITE, SPIELBRETT_HOEHE); // Beispielgröße: 20x20
+        GeneriereSpielFeld.setSpielbrett(SPIELBRETT_BREITE, SPIELBRETT_HOEHE);
         spielbrett.generiereSpielbrett(); // Generiere die Felder des Spielbretts
 
         spielbrett.printSpielbrett(spielbrett); // Ausgabe der Felder mit Koordinaten und Feldtypen
@@ -32,6 +38,9 @@ public class Game extends MainFrame implements RessourcenInterface{
         // Initialisiere den Spieler
         spieler = new Spieler(0, 0, ressourcenManager); // Startposition des Spielers: (0, 0)
         status = spieler.getStatus();
+
+        getPlayerPositionX = spieler.getPositionX();
+        getPlayerPositionY = spieler.getPositionY();
     }
 
     /**
@@ -196,7 +205,7 @@ public class Game extends MainFrame implements RessourcenInterface{
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setContentPane(root);
         frame.pack();
-        frame.setSize(1080,720);
+        frame.setSize(1920,1080);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }

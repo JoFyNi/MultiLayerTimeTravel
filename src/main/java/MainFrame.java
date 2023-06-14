@@ -12,14 +12,16 @@ public class MainFrame {
     private JPanel backScreen;
     private JTextPane statusPane;
     private JTextPane ressourcenPane;
-    private JTextArea spielbrettArea;
     private JScrollPane spielbrettScrollPane;
     private JButton saveBtn;
+    private JPanel mapPane;
     Map<Class<? extends Ressource>, Ressource> ressourcenMap;
     Spieler spieler;
     Status status;
     //
     private boolean activeFight = false;
+    FeldTypen[][] felder = GeneriereSpielFeld.generiereSpielbrett();
+    GeneriereSpielFeld generiereSpielFeld = new GeneriereSpielFeld(felder);
 
 
     public MainFrame () {
@@ -31,7 +33,6 @@ public class MainFrame {
                 updateStatusPane();     // Methode aufrufen, um den Inhalt des statusPane zu aktualisieren
                 updateLogPane();        // Methode aufrufen, um den Inhalt des logPane zu aktualisieren
                 updateRessourcenPane(); // Methode aufrufen, um den Inhalt des ressourcenPane zu aktualisieren
-                updateScreenPane(); //
 
                 buttons();
             }
@@ -54,9 +55,6 @@ public class MainFrame {
         return backScreen;
     }
 
-    public void setScreen(String message) {
-        spielbrettArea.setText(message);
-    }
     public void setLogPane(String message) {
         logPane.setText(message);
     }
@@ -77,13 +75,6 @@ public class MainFrame {
     public void updateRessourcenPane() {
         setRessourcenPane(Game.getRessourceMessage());
     }
-    public void updateScreenPane() {
-        if (activeFight) {
-            setScreen(Spielbrett.getFight());
-        } else {
-            setScreen(Spielbrett.updateSpielbrettArea());
-        }
-    }
 
     public void setSpielerStatus(Spieler setSpieler, Status setStatus) {
         this.spieler = setSpieler;
@@ -94,5 +85,21 @@ public class MainFrame {
         activeFight = fightIsActive;
         logPane.setText("ActiveFight");
 
+    }
+
+    private void createUIComponents() {
+        mapPane = new JPanel();
+
+        // Erstelle das Spielbrett Grafisch und gib es im mapPane aus
+        FeldTypen[][] felder = GeneriereSpielFeld.generiereSpielbrett();
+        GeneriereSpielFeld hexagonGenerator = new GeneriereSpielFeld(felder);
+
+        // Füge das benutzerdefinierte Panel zum mapPane hinzu
+        mapPane.removeAll();
+        mapPane.add(hexagonGenerator);
+
+        // Aktualisiere das mapPane
+        mapPane.revalidate();
+        mapPane.repaint();
     }
 }
